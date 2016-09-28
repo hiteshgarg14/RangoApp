@@ -7,6 +7,32 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 
+"""
+Note that it is not technically a view, because it does not return a response - it
+is just a helper function
+
+* Note that all cookie values are returned as strings;
+"""
+
+# A helper method
+def get_server_side_cookie(request, cookie, default_val=None):
+    val = request.session.get(cookie)
+    if not val:
+        val = default_val
+    return val
+
+# Updated the function definition
+def visitor_cookie_handler(request):
+    visits = int(get_server_side_cookie(request, 'visits', '1'))
+    last_visit_cookie = get_server_side_cookie(request,'last_visit',str(datetime.now()))
+    last_visit_time = datetime.strptime(last_visit_cookie[:-7],'%Y-%m-%d %H:%M:%S')
+    if (datetime.now() - last_visit_time).days > 0:
+        visits = visits + 1
+        request.session['last_visit'] = str(datetime.now())
+    else:
+        request.session['last_visit'] = last_visit_cookie
+    request.session['visits'] = visits
+
 
 def index(request):
     # Order the categories by no. likes in descending order.
@@ -15,16 +41,14 @@ def index(request):
     page_list = Page.objects.order_by('-views')[:5]
     context_dict = {'categories': category_list,
                     'pages':page_list}
-    # Obtain our Response object early so we can add cookie information.
+    visitor_cookie_handler(request)
+    context_dict['visits'] = request.session['visits']
     response = render(request, 'Rango/index.html', context=context_dict)
-    # Call function to handle the cookies
-    visitor_cookie_handler(request, response)
-    # Return response back to the user, updating any cookies that need changed.
-    print request.COOKIES.get('vists') #TODO
     return response
 
 def about(request):
-    return render(request, 'Rango/about.html')
+    context_dict={'visits':request.session['visits']}
+    return render(request, 'Rango/about.html',context=context_dict)
 
 def show_category(request,category_name_slug):
     context_dict = {}
@@ -135,20 +159,3 @@ def restricted(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('index'))
-
-"""
-Note that it is not technically a view, because it does not return a response - it
-is just a helper function
-
-* Note that all cookie values are returned as strings;
-"""
-def visitor_cookie_handler(request, response):
-    visits_cookie = int(request.COOKIES.get('visits', '1'))
-    last_visit_cookie = request.COOKIES.get('last_visit', str(datetime.now()))
-    last_visit_time = datetime.strptime(last_visit_cookie[:-7],'%Y-%m-%d %H:%M:%S')
-    if (datetime.now() - last_visit_time).seconds > 0:
-        visits_cookie = visits_cookie + 1
-        response.set_cookie('last_visit', str(datetime.now()))
-    else:
-        response.set_cookie('last_visit', last_visit_cookie)
-    response.set_cookie('visits',visits_cookie)

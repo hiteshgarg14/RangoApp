@@ -42,6 +42,8 @@ INSTALLED_APPS = [
 """
 django.contrib.auth provides Django with access to the provided authentication system.
 package django.contrib.contenttypes is used by the authentication app to track models installed in your database
+
+* Djangos session middleware handles the client side cookie and the storing of the user/session data.
 """
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
