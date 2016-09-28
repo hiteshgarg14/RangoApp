@@ -1,9 +1,19 @@
 from django.db import models
 from django.template.defaultfilters import slugify
+from django.contrib.auth.models import User
 
 """
 "how do i create a slug in django" turns into "how-do-i-create-a-slug-in-django"
+User object (located at django.contrib.auth.models.User ) is considered to be the core of
+Djangos authentication system
 """
+class UserProfile(models.Model):
+    user = models.OneToOneField(User)
+    website = models.URLField(blank=True)
+    picture = models.ImageField(upload_to='profile_images', blank=True)
+
+    def __str__(self):
+        return self.user.username
 
 class Category(models.Model):
     name = models.CharField(max_length=128, unique=True)

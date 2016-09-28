@@ -26,7 +26,14 @@
     <hr />
     <div>
         <ul>
-            <li><a href="{% url 'Rango:add_category' %}">Add New Category</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'Rango:add_category' %}">Add New Category</a></li>
+                <li><a href="{% url 'Rango:restricted' %}">Restricted Page</a></li>
+                <li><a href="{% url 'Rango:user_logout' %}">Logout</a></li>
+            {% else %}
+                <li><a href="{% url 'Rango:register' %}">Sign Up</a></li>
+                <li><a href="{% url 'Rango:user_login' %}">Login</a><li>
+            {% endif %}
             <li><a href="{% url 'Rango:about' %}">About</a></li>
             <li><a href="{% url 'Rango:index' %}">Index</a></li>
         </ul>
