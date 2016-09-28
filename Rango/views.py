@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 
 
 def index(request):
+    request.session.set_test_cookie()
     # Order the categories by no. likes in descending order.
     # Retrieve the top 5 only - or all if less than 5.
     category_list = Category.objects.order_by('-likes')[:5]
@@ -17,6 +18,9 @@ def index(request):
     return render(request, 'Rango/index.html', context=context_dict)
 
 def about(request):
+    if request.session.test_cookie_worked():
+        print "TEST COOKIE WORKED!"
+        request.session.delete_test_cookie()
     return render(request, 'Rango/about.html')
 
 def show_category(request,category_name_slug):
