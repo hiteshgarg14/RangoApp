@@ -38,7 +38,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Rango',
+    'registration',
 ]
+
+# If True, users can register
+REGISTRATION_OPEN = True
+# One-week activation window; you may, of course, use a different value.
+ACCOUNT_ACTIVATION_DAYS = 7
+# If True, the user will be automatically logged in.
+REGISTRATION_AUTO_LOGIN = True
+# The page you want users to arrive at after they successful log in
+LOGIN_REDIRECT_URL = '/rango/'
+# The page users are directed to if they are not logged in,
+# and are trying to access pages requiring authentication
+LOGIN_URL = '/accounts/login/'
+
 """
 django.contrib.auth provides Django with access to the provided authentication system.
 package django.contrib.contenttypes is used by the authentication app to track models installed in your database
@@ -131,4 +145,4 @@ STATIC_DIR = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [STATIC_DIR, ]
 
 STATIC_URL = '/static/'
-LOGIN_URL = '/rango/login/'
+LOGIN_URL = '/accounts/login/'

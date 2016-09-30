@@ -29,10 +29,11 @@
             {% if user.is_authenticated %}
                 <li><a href="{% url 'Rango:add_category' %}">Add New Category</a></li>
                 <li><a href="{% url 'Rango:restricted' %}">Restricted Page</a></li>
-                <li><a href="{% url 'Rango:user_logout' %}">Logout</a></li>
+                <li><a href="{% url 'auth_password_change' %}">Change Password</a></li>
+                <li><a href="{% url 'auth_logout' %}?next=/rango/">Logout</a></li>
             {% else %}
-                <li><a href="{% url 'Rango:register' %}">Sign Up</a></li>
-                <li><a href="{% url 'Rango:user_login' %}">Login</a><li>
+                <li><a href="{% url 'registration_register' %}">Sign Up</a></li>
+                <li><a href="{% url 'auth_login' %}">Login</a><li>
             {% endif %}
             <li><a href="{% url 'Rango:about' %}">About</a></li>
             <li><a href="{% url 'Rango:index' %}">Index</a></li>
@@ -40,3 +41,9 @@
     </div>
 </body>
 </html>
+
+<!--
+Notice that for the logout, we have included a ?next=/rango/ . This is so when the user logs out, it
+will redirect them to the index page of rango. If we exclude it, then they will be directed to the log
+out page (but that would not be very nice).
+-->

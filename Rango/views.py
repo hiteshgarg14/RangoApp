@@ -6,6 +6,13 @@ from Rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from registration.backends.simple.views import RegistrationView
+
+# Create a new class that redirects the user to the index page,
+#if successful at logging
+class MyRegistrationView(RegistrationView):
+    def get_success_url(self,request):  #CORRECTION TODO
+        return '/rango/'
 
 """
 Note that it is not technically a view, because it does not return a response - it
@@ -104,6 +111,7 @@ def add_page(request, category_name_slug):
     context_dict = {'form':form, 'category': category}
     return render(request, 'Rango/add_page.html', context_dict)
 
+"""
 def register(request):
     registered = False
     if request.method == 'POST':
@@ -132,7 +140,8 @@ def register(request):
                     {'user_form': user_form,
                      'profile_form': profile_form,
                      'registered': registered})
-
+"""
+"""
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -150,12 +159,15 @@ def user_login(request):
             return HttpResponse("Invalid login details supplied.")
     else:
         return render(request, 'Rango/login.html', {})
+"""
 
 @login_required
 def restricted(request):
     return HttpResponse("Since you're logged in, you can see this text!")
 
+"""
 @login_required
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('index'))
+"""

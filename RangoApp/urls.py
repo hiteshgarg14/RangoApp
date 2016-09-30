@@ -18,8 +18,19 @@ from django.contrib import admin
 from django.conf.urls import include
 from Rango import views
 
+
 urlpatterns = [
     url(r'^$',views.index, name='index'),
     url(r'^rango/', include('Rango.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^accounts/register/$',views.MyRegistrationView.as_view(),name='registration_register'), #TODO
+    url(r'^accounts/', include('registration.backends.simple.urls')),
 ]
+
+"""
+The django-registration-redux package provides a number of different registration backends,
+depending on your needs. For example you may want a two-step process, where user is sent a
+confirmation email, and a verification link. Here we will be using the simple one-step registration
+process, where a user sets up their account by entering in a username, email, and password, and is
+automatically logged in.
+ """
