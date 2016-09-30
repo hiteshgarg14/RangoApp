@@ -8,8 +8,8 @@
 {% block body_block %}
     <div>
         {% if category %}
-            <form role="form" id="page_form" method="post" action="{% url 'Rango:add_page' category.slug %}">
-                <h2 class="form-signin-heading"> Add a Page to <a href="{% url 'Rango:show_category' category.slug %}">{{ category.name }}</a></h2>
+            <h1>Add a Page to {{category.name}}</h1>
+            <form id="category_form" method="post" action="{% url 'Rango:add_page' category.slug %}">
                 {% csrf_token %}
                 {% for hidden in form.hidden_fields %}
                     {{ hidden }}
@@ -19,8 +19,7 @@
                     {{ field.help_text }}
                     {{ field }} <br /><br />
                 {% endfor %}
-                <br/>
-                <button class="btn btn-primary" type="submit" name="submit">Add Page</button>
+                <input type="submit" name="submit" value="Create Category" />
             </form>
         {% else %}
             <h2>A category by this name does not exist</h2>
