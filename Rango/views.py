@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from registration.backends.simple.views import RegistrationView
-
+from Rango.bing_search import run_query
 # Create a new class that redirects the user to the index page,
 #if successful at logging
 class MyRegistrationView(RegistrationView):
@@ -171,3 +171,11 @@ def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('index'))
 """
+
+def search(request):
+    result_list = []
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            result_list = run_query(query)
+    return render(request, 'Rango/search.html', {'result_list': result_list})

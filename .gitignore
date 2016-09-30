@@ -1,8 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-
-
+bing.key
+*.key
 # OSX Finder turds
 .DS_Store
 
