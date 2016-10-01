@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from Rango.models import Category, Page
 from Rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
@@ -61,7 +61,7 @@ def show_category(request,category_name_slug):
     context_dict = {}
     try:
         category = Category.objects.get(slug=category_name_slug)
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.filter(category=category).order_by('-views')
         context_dict['pages'] = pages
         context_dict['category'] = category
     except Category.DoesNotExist:
@@ -179,3 +179,19 @@ def search(request):
         if query:
             result_list = run_query(query)
     return render(request, 'Rango/search.html', {'result_list': result_list})
+
+def track_url(request):
+    page_id = None
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+            try:
+                page = Page.objects.get(id=page_id)
+                page.views = page.views +1
+                page.save()
+                url = page.url
+            except:
+                pass
+            return redirect(url)
+        else:
+            return HttpResponseRedirect(reverse('index'))
