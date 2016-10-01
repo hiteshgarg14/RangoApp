@@ -7,6 +7,9 @@
 
 {% block body_block %}
     {% if category %}
+        {% if user.is_authenticated %}
+            {% include 'Rango/search.html' %}
+        {% endif %}
         <h1>{{ category.name }}</h1>
         {% if pages %}
             <ul>
@@ -19,7 +22,7 @@
                             ({{ page.views }} view)
                         {% endif %}
                     </li>
-                {% endfor %}    
+                {% endfor %}
             </ul>
         {% else %}
             <strong>No pages currently in category.</strong>

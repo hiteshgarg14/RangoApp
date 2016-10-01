@@ -34,7 +34,7 @@
         <nav class="nav navbar-nav pull-xs-left">
           <a class="nav-item nav-link" href="{% url 'Rango:index' %}">Home</a>
           <a class="nav-item nav-link" href="{% url 'Rango:about' %}">About</a>
-          <a class="nav-item nav-link" href="{% url 'Rango:search' %}">Search</a>
+          <!--<a class="nav-item nav-link" href="{% url 'Rango:search' %}">Search</a>-->
           {% if user.is_authenticated %}
               <a class="nav-item nav-link" href="{% url 'Rango:add_category' %}">Add a New Category</a>
               <a class="nav-item nav-link" href="{% url 'auth_logout' %}?next=/rango/">Logout</a>
