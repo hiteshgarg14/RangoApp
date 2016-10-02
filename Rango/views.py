@@ -242,3 +242,9 @@ def profile(request, username):
             print(form.errors)
 
     return render(request, 'Rango/profile.html', {'userprofile': userprofile, 'selecteduser': user, 'form': form})
+
+
+@login_required
+def list_profiles(request):
+    userprofile_list = UserProfile.objects.all()
+    return render(request, 'Rango/list_profiles.html',{'userprofile_list' : userprofile_list})
