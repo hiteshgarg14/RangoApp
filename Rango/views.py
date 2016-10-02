@@ -8,11 +8,13 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from registration.backends.simple.views import RegistrationView
 from Rango.bing_search import run_query
+from django.contrib.auth.models import User
+from Rango.models import UserProfile
 # Create a new class that redirects the user to the index page,
 #if successful at logging
 class MyRegistrationView(RegistrationView):
-    def get_success_url(self,request):  #CORRECTION TODO
-        return '/rango/'
+    def get_success_url(self,user):  #CORRECTION TODO
+        return reverse('Rango:register_profile')
 
 """
 Note that it is not technically a view, because it does not return a response - it
@@ -76,7 +78,7 @@ def show_category(request,category_name_slug):
             result_list = run_query(query)
             context_dict['query'] = query
             context_dict['result_list'] = result_list
-                
+
     return render(request, 'Rango/category.html', context_dict)
 
 """
@@ -205,3 +207,38 @@ def track_url(request):
             return redirect(url)
         else:
             return HttpResponseRedirect(reverse('index'))
+
+@login_required
+def register_profile(request):
+    form = UserProfileForm()
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+            return redirect('index')
+        else:
+            print form.errors
+    return render(request,'Rango/profile_registration.html',{'form': form})
+
+
+@login_required
+def profile(request, username):
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return redirect('index')
+
+    userprofile = UserProfile.objects.get_or_create(user=user)[0]
+    form = UserProfileForm({'website': userprofile.website, 'picture': userprofile.picture})
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=userprofile)
+        if form.is_valid():
+            form.save(commit=True)
+            return redirect('Rango:profile', user.username)
+        else:
+            print(form.errors)
+
+    return render(request, 'Rango/profile.html', {'userprofile': userprofile, 'selecteduser': user, 'form': form})

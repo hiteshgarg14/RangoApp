@@ -37,6 +37,7 @@
           <!--<a class="nav-item nav-link" href="{% url 'Rango:search' %}">Search</a>-->
           {% if user.is_authenticated %}
               <a class="nav-item nav-link" href="{% url 'Rango:add_category' %}">Add a New Category</a>
+              <a class="nav-item nav-link" href="{% url 'Rango:profile' user.username %}">Profile</a>
               <a class="nav-item nav-link" href="{% url 'auth_logout' %}?next=/rango/">Logout</a>
           {% else %}
               <a class="nav-item nav-link" href="{% url 'registration_register' %}">Register Here</a>
